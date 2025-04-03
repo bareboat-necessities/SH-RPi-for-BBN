@@ -44,4 +44,7 @@ CONFIG=/boot/firmware/config.txt
 echo "Installing the GPIO poweroff detection overlay"
 enable_config_line "dtoverlay=gpio-poweroff,gpiopin=2,input,active_low=17" $CONFIG
 
+#echo "Installing PCF8563 real-time clock device overlay for SH-RPi v2"
+#enable_config_line "dtoverlay=i2c-rtc,pcf8563" $CONFIG
+
 #systemctl enable shrpid
