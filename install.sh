@@ -2,6 +2,18 @@
 
 # as root
 
+function enable_config_line() {
+  local line="$1"
+  local file="$2"
+  if grep -q "$line" "$file"; then
+    if grep -q "^#.*$line" "$file"; then
+      sed -i "s/^#\($line\)/\1/" "$file"
+    fi
+  else
+    echo "$line" | tee -a "$file" >/dev/null
+  fi
+}
+
 apt-get -y update
 apt-get -y install pipx
 
@@ -26,5 +38,10 @@ ExecStart=/usr/local/bin/shrpid -s /var/run/shrpid.sock
 [Install]
 WantedBy=multi-user.target
 EOF'
+
+CONFIG=/boot/firmware/config.txt
+
+echo "Installing the GPIO poweroff detection overlay"
+enable_config_line "dtoverlay=gpio-poweroff,gpiopin=2,input,active_low=17" $CONFIG
 
 #systemctl enable shrpid
